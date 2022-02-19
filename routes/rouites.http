@@ -1,0 +1,10 @@
+GET http://localhost:3000/peoples
+
+###
+POST http://localhost:3000/peoples
+Content-Type: application/json
+
+{
+    "name": "chinmoy das",
+    "membershipDate": "12/04/2019"
+ }
