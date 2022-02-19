@@ -12,19 +12,28 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: err.message})
   }
 })
+
+
+
 //GET ONE PEOPLE BY ID
-router.get('/:id', getPeople, (req, res) => {
-    res.send(res.peoples.name)
+router.get('/:id', GETPeople, (req, res) => {
+       
+    res.json(res.GETPeople)
+    
+    
 })
+
+
+
 //CREATING PEOPLE
 router.post('/', async (req, res) => {
-    const Peoples = new People({
+    const People = new Peoples({
         name: req.body.name,
         membershipDate: req.body.membershipDate
     })
     try {
 
-        const newPeople = await Peoples.save()
+        const newPeople = await People.save()
         res.status(201).json(newPeople)
 
     } catch (err) {
@@ -33,28 +42,60 @@ router.post('/', async (req, res) => {
     
 })
 //UPDATING PEOPLE 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', GETPeople, async(req, res) => {
+    
+    if (req.body.name != null) {
+        res.GETPeople.name = req.body.name
+    }
+
+
+    if (req.body.membershipDate != null) {
+        res.GETPeople.membershipDate = req.body.membershipDate
+
+
+    } 
+
+    try {
+
+        const updatePeople = await res.GETPeople.save()
+        res.json(updatePeople)
+
+    } catch (err) {
+        
+        res.status(400).json({ message: err.message})
+        
+    }
     
 })
+
+
 //DELETING PEOPLE 
-router.delete('/:id', (req, res) => {
-    res.peoples
+router.delete('/:id', GETPeople, async (req, res) => {
+    try {
+        await res.GETPeople.remove()
+        res.json({message: 'people deleted'})
+    } catch (err) {
+        // if something went wrong on our side ***other than value mismatch***
+        res.status(500).json({ message: err.message})
+    }
+    
+    
     
 })
 
 //Get prople function
-async function getPeople(req, res, next) {
-    let peoples
+async function GETPeople(req, res, next) {
+    let FindPeople
     try {
-        peoples = await peoples.findById(req.params.id)
-        if (peoples === null)
-            return res.status(404).json({MESSAGE: ' CANNOT FIND PEOPLE'})
-        
-    } catch (err) {
-        return res.status(500).json({MESSAGE: err.message})
+        FindPeople = await Peoples.findById(req.params.id)
+        if (FindPeople === null) {
+            res.send(404)
+        }
+         } catch (err) {
+        return res.status(404).json({MESSAGE: err.message})
         
     }
-    res.peoples = peoples
+    res.GETPeople = FindPeople
     next()
     
 }

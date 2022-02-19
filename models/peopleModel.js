@@ -10,7 +10,9 @@ const peoplesSchema = new mongoose.Schema({
     },
     membershipDate: {
         type: Date,
+        required: true,
         default: Date.now
+        
     }
 })
 
